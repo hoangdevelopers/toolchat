@@ -13,6 +13,9 @@ UserManager.prototype.send = function ({mail, password, message, filename}) {
         if (!filename) {
             reject('Filename require');
             return;
+        } else if (!message) {
+            reject('Message require');
+            return;
         }
         const path = dataFolder + filename;
         var rd = readline.createInterface({

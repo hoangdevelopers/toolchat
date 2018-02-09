@@ -65,8 +65,8 @@ app.post('/send_message', function (req, res) {
       req.session.success = 'Send message success!'
       res.redirect('back');
     })
-    .catch(() => {
-      req.session.error = 'Send message fail!'
+    .catch((err) => {
+      req.session.error = err || 'Send message fail!'
       res.redirect('back');
     })
 });
