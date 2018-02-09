@@ -1,33 +1,54 @@
 const User = require("./user");
 const log = require("./log");
+const fs = require('fs');
+const readline = require('readline');
+const dataFolder = './data/';
+const _accounts = require('../account');
 
 const UserManager = function () {
-    this.accounts = [{
-        email: 'muoimotgio2612@gmail.com',
-        password: 'duchoang'
-    },
-    {
-        email: 'djvjckkun@yahoo.com.vn',
-        password: 'ilove9d'
-    }],
-    this.ids = {'TRE_TRAU': [100005652216479, 100005025289407]}
+    this.accounts = _accounts;
 }
-UserManager.prototype.send = function (msg, id_type) {
+UserManager.prototype.send = function ({mail, password, message, filename}) {
     return new Promise( (resolve, reject) => {
-        const id_list = this.ids[id_type];
-        const task = [];
-        console.log(msg)
-        if (Array.isArray(id_list)){
-            for (let id of id_list) {
-                const account = this.accounts[Math.floor(Math.random() * Math.floor(this.accounts.length))]
-                const user = new User(account.email, account.password);
-                task.push(user.send(msg, [id]));
-            }
+        if (!filename) {
+            reject('Filename require');
+            return;
         }
-        Promise.all(task).then(() => {
-            log('Finish');
-            resolve();
+        const path = dataFolder + filename;
+        var rd = readline.createInterface({
+            input: fs.createReadStream(path),
+            output: false,
+            console: false
         });
+        const ids = [];
+        let account = [];
+        if (mail) {
+            accounts = [{
+                email: mail,
+                password: password
+            }];
+        } else {
+            accounts = this.accounts
+        }
+        rd.on('line', function(line) {
+            ids.push(line);
+        });
+        rd.on('close', () => {
+            const task = [];
+            if (Array.isArray(ids)){
+                for (let id of ids) {
+                    const account = accounts[Math.floor(Math.random() * Math.floor(accounts.length))]
+                    const user = new User(account.email, account.password);
+                    task.push(user.send(message, [id]));
+                }
+            }
+            Promise.all(task).then(() => {
+                log('Finish');
+                resolve();
+            });
+        })
+        // const id_list = this.ids[id_type];
+       
           
         
     })

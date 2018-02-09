@@ -3,18 +3,25 @@
 
 <h1>Send message</h1>
 <%- message %>
-Wahoo! send message area, click to <a href="/logout">logout</a>
 <form method="post" action="/send_message">
+  <p>
+    <label>Mail:</label>
+    <input type="text" name="mail">
+  </p>
+  <p>
+    <label>Pass:</label>
+    <input type="text" name="password">
+  </p>
   <p>
     <label>Message:</label>
     <input type="text" name="message">
   </p>
   <p>
     <label>Send to:</label>
-    <select name="type">
-      <option value="TRE_TRAU">Tre Trau</option>
-      <option value="GIA_TRAU">Gia Trau</option>
-      <option value="BAN_BE">Ban be</option>
+    <select name="filename">
+      <% for(var i=0; i<files.length; i++) {%>
+        <option value="<%= files[i] %>"><%= files[i] %></option>
+      <% } %>
     </select>
   </p>
   <p>
